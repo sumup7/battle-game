@@ -1,18 +1,17 @@
-#messageArea{
+.canvas-wrapper {
   position: relative;
-  color: black;
-  background-color:black;
-  width:300px;
-  height:150px;
-  text-align: center;
 }
-#messageArea > span {
+.canvas-wrapper canvas {
   position: absolute;
-  font-size: 50px;
-  top: 100px;
-  left: 0;
-  right: 0;
-  margin: auto;
+}
+.option1 {
+  top: 50px;
+}
+.option2 {
+  top: 150px;
+}
+.option3 {
+  top: 250px;
 }
 button {
   padding: 5px 20px;
