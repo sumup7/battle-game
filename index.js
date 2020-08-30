@@ -243,9 +243,6 @@ function turnGame() {
       const r = Math.floor(Math.random() * 100);
       const i = r % speedArray.length;
       randomSpeed = speedArray[i];
-      console.log(r);
-      console.log(i);
-      console.log(randomSpeed);
       currentPlayerSpeed = currentPlayerSpeed + randomSpeed;
       currentEnemyHp = currentEnemyHp - enemyDamage;
       
