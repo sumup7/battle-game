@@ -3,6 +3,7 @@ let turn = 0;
 let msW;
 let enemyDamage = 0;
 let playerDamage = 0;
+let randomSpeed = 0;
 let op1;
 let op2;
 let op3;
@@ -10,6 +11,7 @@ let s;
 let m;
 let re;
 let pointArray = new Array;
+const speedArray = [10,20,30];
 
 const canvas = document.body.querySelector('#draw');
 let ctx = canvas.getContext('2d');
@@ -177,7 +179,7 @@ function turnGame() {
     //技２で相手のスピードを上回り先攻した場合
     ;
     waza2damage();
-    message('先手をとった。素早くて軽い攻撃' + enemyDamage + 'のダメージ。自分のスピードが20上がった。');
+    message('先手をとった。素早くて軽い攻撃' + enemyDamage + 'のダメージ。自分のスピードが'+ randomSpeed + '上がった。');
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
     turnNext();;
   } else if (turn === 4 && currentPlayerSpeed < enemyStatus.speed) {
@@ -191,7 +193,7 @@ function turnGame() {
     //技２で後攻になった時の自分の攻撃のターン
     ;
     waza2damage();
-    message('自分の攻撃のターン。素早くて軽い攻撃' + enemyDamage + 'のダメージ。自分のスピードが20上がった。');
+    message('自分の攻撃のターン。素早くて軽い攻撃' + enemyDamage + 'のダメージ。自分のスピードが' + randomSpeed + '上がった。');
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
     turnNext();
     }else if(turn === 6 && currentPlayerSpeed > enemyStatus.speed){
@@ -238,8 +240,15 @@ function turnGame() {
     //技２の選択肢を選んだ時の処理
     function waza2damage() {
       enemyDamage = playerStatus.offensive - enemyStatus.defense;
-      currentPlayerSpeed = currentPlayerSpeed + 20;
+      const r = Math.floor(Math.random() * 100);
+      const i = r % speedArray.length;
+      randomSpeed = speedArray[i];
+      console.log(r);
+      console.log(i);
+      console.log(randomSpeed);
+      currentPlayerSpeed = currentPlayerSpeed + randomSpeed;
       currentEnemyHp = currentEnemyHp - enemyDamage;
+      
       if(currentEnemyHp < 0){
         currentEnemyHp = 0;
         return;
