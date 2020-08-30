@@ -10,7 +10,6 @@ let s;
 let m;
 let re;
 let pointArray = new Array;
-let pointArrayTotal = new Array;
 
 const canvas = document.body.querySelector('#draw');
 let ctx = canvas.getContext('2d');
@@ -37,14 +36,11 @@ ctx.fill();
 function enemyRender() {
   let points = new Map();
   for(let i = 0; i < 7; ++i) {
-    let n = Math.floor(Math.random() * 250) + 100;
-    let a = Math.floor(Math.random() * 250) + 100;
-    console.log(n);
-    console.log(a);
+    let n = Math.floor(Math.random() * 250) + 50;
+    let a = Math.floor(Math.random() * 250) + 50;
     points.set(n,a);
   }
   pointArray = Array.from(points);
-  console.log(pointArray);
  }
 
  
@@ -98,7 +94,7 @@ let currentEnemySpeed = enemyStatus.speed;
 
 turnGame();
 
-function gameSet() {
+function gameSetCheck() {
    //どちらかか両方のhpが０以下になった時引き分けまたは勝敗を表示してゲームが終わる処理
    if (currentPlayerHp <= 0 && currentEnemyHp <= 0) {
     // 双方相討ちで引き分けになったというメッセージを出す
@@ -110,13 +106,13 @@ function gameSet() {
     // 敵のライフがゼロ以下になった。勝った。というメッセージを出す
     ;
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-    message('敵のライフがゼロ以下になった。勝った。');
+    message('敵のライフがゼロになった。勝った。');
     restartButton();
   } else if (currentPlayerHp <= 0) {
     // 自分のライフがゼロ以下になった。負けた。というメッセージを出す
     ;
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-    message('自分のライフがゼロ以下になった。負けた。');
+    message('自分のライフがゼロになった。負けた。');
     restartButton();
     }else if(turn === 1 && currentPlayerSpeed > enemyStatus.speed){
       turn = 2;
@@ -130,15 +126,9 @@ function gameSet() {
     }else if(turn === 4 && currentPlayerSpeed > enemyStatus.speed){
       turn = 2;
       turnGame();
-    // } else if (turn === 3) {
-    //   turn = 0;
-    //   turnGame();
     } else if(turn === 4 && currentPlayerSpeed < enemyStatus.speed) {
       turn = 5;
       turnGame();
-    // } else if(true === 5) {
-    //   turn = 0;
-    //   turnGame();
     }
     else {
   ;
@@ -153,40 +143,28 @@ function turnGame() {
  
   if (turn === 0
     ) {
-    gameSet();
+    gameSetCheck();
   } else if (turn === 1 && currentPlayerSpeed > enemyStatus.speed) {
     //技１を選んで自分のスピードが敵のスピードを上まって先攻の場合
     ;
     waza1damage();
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
     message('先手をとった。重くて遅い一撃' + enemyDamage + 'のダメージ');
-    document.body.onkeydown = function () {
-      msW.removeChild(s);
-      msW.removeChild(m);
-      gameSet();
-    }
-  } else if (turn === 1 && currentPlayerSpeed < enemyStatus.speed) {
-    //技１を選んで相手のスピードが自分のスピードを上まった後攻の場合
+    turnNext();;
+  } else if (turn === 1 && currentPlayerSpeed <= enemyStatus.speed) {
+    //技１を選んで相手のスピードが自分のスピードを上まった後攻の場合または双方のスピードが同じだった後攻の場合
     ;
     enemyOffensive();
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
     message('素早さで負けた。相手の攻撃' + playerDamage + 'のダメージ');
-    document.body.onkeydown = function () {
-      msW.removeChild(s);
-      msW.removeChild(m);
-      gameSet();
-    }
+    turnNext();
   } else if (turn === 2) {
     //先攻した時の相手の攻撃
     ;
     enemyOffensive();
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
     message('相手の攻撃のターン。相手の攻撃' + playerDamage + 'のダメージ');
-    document.body.onkeydown = function () {
-      msW.removeChild(s);
-      msW.removeChild(m);
-      gameSet();
-    }
+    turnNext();;
   } else if (turn === 3) {
     //相手に先攻された時の後攻の攻撃
     ;
@@ -194,53 +172,37 @@ function turnGame() {
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
     message('自分の攻撃のターン。重くて遅い一撃' + enemyDamage + 'のダメージ');
     // statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-    document.body.onkeydown = function () {
-      msW.removeChild(s);
-      msW.removeChild(m);
-      gameSet();
-    }
+    turnNext();;
   } else if (turn === 4 && currentPlayerSpeed > enemyStatus.speed) {
     //技２で相手のスピードを上回り先攻した場合
     ;
     waza2damage();
     message('先手をとった。素早くて軽い攻撃' + enemyDamage + 'のダメージ。自分のスピードが20上がった。');
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-    document.body.onkeydown = function () {
-      msW.removeChild(s);
-      msW.removeChild(m);
-      gameSet();
-    }
+    turnNext();;
   } else if (turn === 4 && currentPlayerSpeed < enemyStatus.speed) {
     //技２でスピード負けて相手の先攻になった場合
     ;
     enemyOffensive();
     message('素早さで負けた。相手の攻撃' + playerDamage + 'のダメージ');
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-    document.body.onkeydown = function () {
-      msW.removeChild(s);
-      msW.removeChild(m);
-      gameSet();
-    }
+    turnNext();;
   } else if(turn === 5) {
     //技２で後攻になった時の自分の攻撃のターン
     ;
     waza2damage();
     message('自分の攻撃のターン。素早くて軽い攻撃' + enemyDamage + 'のダメージ。自分のスピードが20上がった。');
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-    document.body.onkeydown = function () {
-      msW.removeChild(s);
-      msW.removeChild(m);
-      gameSet();}
+    turnNext();
     }else if(turn === 6 && currentPlayerSpeed > enemyStatus.speed){
     //技３で相手のスピードを上まって先に回復を使う場合
     ;
     waza3recoveryHp();
     message('先手をとった。自分のHPを回復。HPが50回復して'+ currentPlayerHp + 'になっった。');
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-    document.body.onkeydown = function () {
+    document.body.onkeydown = () => {
       turn = 2;
-      msW.removeChild(s);
-      msW.removeChild(m);
+      eraserStatusAndMessage();
       turnGame();}
     }else if(turn === 6 && currentPlayerSpeed < enemyStatus.speed) {
       //技３で相手のスピードが上まって先攻される場合
@@ -248,10 +210,9 @@ function turnGame() {
       enemyOffensive();
       message('先手を取られた。相手の攻撃' + playerDamage + 'のダメージ');
       statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-      document.body.onkeydown = function () {
+      document.body.onkeydown = () => {
         turn = 7;
-        msW.removeChild(s);
-        msW.removeChild(m);
+        eraserStatusAndMessage();
         turnGame();}
     }else if(turn === 7) {
       //技３で先攻された場合の自分の回復ターン
@@ -259,10 +220,9 @@ function turnGame() {
       waza3recoveryHp();
       message('自分のターン。自分のHPを回復。HPが50回復した'+ currentPlayerHp + 'になっった。');
       statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-      document.body.onkeydown = function () {
+      document.body.onkeydown = () => {
         turn = 0;
-        msW.removeChild(s);
-        msW.removeChild(m);
+        eraserStatusAndMessage();
         turnGame();}
     } 
     }
@@ -270,15 +230,20 @@ function turnGame() {
     //技１の選択肢を選んだ時の処理
     function waza1damage() {
       enemyDamage = (playerStatus.offensive - enemyStatus.defense) * 1.5;
-      console.log(enemyDamage);
       currentEnemyHp = currentEnemyHp - enemyDamage;
-    }
+      if(currentEnemyHp < 0){
+        currentEnemyHp = 0;
+        return;
+    }}
     //技２の選択肢を選んだ時の処理
     function waza2damage() {
       enemyDamage = playerStatus.offensive - enemyStatus.defense;
       currentPlayerSpeed = currentPlayerSpeed + 20;
       currentEnemyHp = currentEnemyHp - enemyDamage;
-    }
+      if(currentEnemyHp < 0){
+        currentEnemyHp = 0;
+        return;
+    }}
     //技３の選択肢を選んだ時の処理
     function waza3recoveryHp() {
       currentPlayerHp = currentPlayerHp + 50;
@@ -287,7 +252,10 @@ function turnGame() {
     function enemyOffensive() {
       playerDamage = enemyStatus.offensive - playerStatus.defense;
       currentPlayerHp = currentPlayerHp - playerDamage;
-    }
+      if(currentPlayerHp < 0){
+        currentPlayerHp = 0;
+      return;
+    }}
     //自分と敵のHPとスピードを表示する処理
     function statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed) {
       msW = msWindow.parentNode;
@@ -314,13 +282,18 @@ function turnGame() {
       m.style.left = '60px';
       m.style.width = '700px';
       m.style.height = '100px';
-      m.style.background = 'transparent';
       m.style.color = 'white';
       m.style.textAlign = 'center';
       m.style.font = '50px monospace';
       msW.appendChild(m);
       m.innerHTML = textMessage;
-      console.log(textMessage);
+    }
+    //キーを押してターンを進める
+    function turnNext() {
+      document.body.onkeydown = () => {
+        eraserStatusAndMessage();
+        gameSetCheck();
+      }
     }
     //画面の初期情報を消す関数
     function eraser() {
@@ -328,6 +301,11 @@ function turnGame() {
       msW.removeChild(op2);
       msW.removeChild(op3);
       msW.removeChild(s);
+    }
+    //画面のステータス情報とメッセージを消す関数
+    function eraserStatusAndMessage() {
+      msW.removeChild(s);
+      msW.removeChild(m);
     }
     //技１を選択するボタン
     function optionButton1() {
@@ -345,7 +323,7 @@ function turnGame() {
       op1.style.font = '50px monospace';
       msW.appendChild(op1);
       op1.innerHTML = "重く遅い一撃";
-      op1.addEventListener('click', function () {
+      op1.addEventListener('click', ()　=> {
         eraser();
         turn = 1;
         turnGame()
@@ -366,7 +344,7 @@ function turnGame() {
         op2.style.font = '50px monospace';
         msW.appendChild(op2);
         op2.innerHTML = "素早く軽い攻撃";
-        op2.addEventListener('click', function () {
+        op2.addEventListener('click', () => {
           eraser();
           turn = 4;
           turnGame();
@@ -388,7 +366,7 @@ function turnGame() {
         op3.style.font = '50px monospace';
         msW.appendChild(op3);
         op3.innerHTML = "回復";
-        op3.addEventListener('click', function () {
+        op3.addEventListener('click', () => {
           eraser();
           turn = 6;
 　　　　　　turnGame();
@@ -408,6 +386,6 @@ function turnGame() {
       re.style.font = '40px monospace';
       msW.appendChild(re);
       re.innerHTML = "もう一度戦うならここをクリック";
-      re.addEventListener('click', function () {
+      re.addEventListener('click', () => {
         location.reload();
       })}        
