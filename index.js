@@ -9,13 +9,8 @@ let op3;
 let s;
 let m;
 let re;
-
-// const points = [
-//   100,100,
-//   300,100,
-//   100,300,
-//   300,300
-// ]
+let pointArray = new Array;
+let pointArrayTotal = new Array;
 
 const canvas = document.body.querySelector('#draw');
 let ctx = canvas.getContext('2d');
@@ -30,11 +25,6 @@ ctx.beginPath(350, 350);
 // パスの始点を設定する
 ctx.moveTo(350, 350);
 // 各頂点を結ぶパスを設定する
-// for(let i = 2; i < points.length; i += 2){
-//     ctx.lineTo(points[i], points[i + 1]);
-//     console.log(points[i],points[i + 1]);
-// }
-// ctx.lineTo(300, 100);
 ctx.lineTo(400, 250);
 ctx.lineTo(450, 350);
 
@@ -44,25 +34,35 @@ ctx.closePath(350, 350);
 ctx.fill();
 }
 
+function enemyRender() {
+  let points = new Map();
+  for(let i = 0; i < 7; ++i) {
+    let n = Math.floor(Math.random() * 250) + 100;
+    let a = Math.floor(Math.random() * 250) + 100;
+    console.log(n);
+    console.log(a);
+    points.set(n,a);
+  }
+  pointArray = Array.from(points);
+  console.log(pointArray);
+ }
+
+ 
+
 function enemy() {
+  enemyRender();
 ctx.fillStyle = 'yellow';
-ctx.beginPath(100, 100);
+ctx.beginPath(pointArray[0][0],pointArray[0][1]);
 // パスの始点を設定する
-ctx.moveTo(100, 100);
-// 各頂点を結ぶパスを設定する
-// for(let i = 2; i < points.length; i += 2){
-//     ctx.lineTo(points[i], points[i + 1]);
-//     console.log(points[i],points[i + 1]);
-// }
-// ctx.lineTo(300, 100);
-ctx.lineTo(50, 100);
-ctx.lineTo(150, 100);
-// ctx.lineTo(100, 300);
-ctx.lineTo(150, 250);
-ctx.lineTo(250, 250);
-ctx.lineTo(100, 100);
+ctx.moveTo(pointArray[1][0], pointArray[1][1]);
+
+ctx.lineTo(pointArray[2][0], pointArray[2][1]);
+ctx.lineTo(pointArray[3][0], pointArray[3][1]);
+ctx.lineTo(pointArray[4][0], pointArray[4][1]);
+ctx.lineTo(pointArray[5][0], pointArray[5][1]);
+ctx.lineTo(pointArray[6][0], pointArray[6][1]);
 // パスを閉じることを明示する
-ctx.closePath(100, 100);
+ctx.closePath(pointArray[0][0],pointArray[0][1]);
 // 設定したパスで多角形の描画を行う
 ctx.fill();
 }
@@ -294,7 +294,7 @@ function turnGame() {
       s = document.createElement('div');
       s.setAttribute('id', 'status');
       s.style.position = 'absolute';
-      s.style.top = '680px';
+      s.style.top = '730px';
       s.style.left = '60px';
       s.style.width = '800px';
       s.style.height = '100px';
@@ -310,7 +310,7 @@ function turnGame() {
       m = document.createElement('div');
       m.setAttribute('id', 'message');
       m.style.position = 'absolute';
-      m.style.top = '750px';
+      m.style.top = '800px';
       m.style.left = '60px';
       m.style.width = '700px';
       m.style.height = '100px';
@@ -335,7 +335,7 @@ function turnGame() {
       op1 = document.createElement('div');
       op1.setAttribute('id', 'option1');
       op1.style.position = 'absolute';
-      op1.style.top = '730px';
+      op1.style.top = '780px';
       op1.style.left = '60px';
       op1.style.width = '400px';
       op1.style.height = '300px';
@@ -348,9 +348,7 @@ function turnGame() {
       op1.addEventListener('click', function () {
         eraser();
         turn = 1;
-        turnGame();
-        // console.log(turn);
-
+        turnGame()
       })}
 
       //技２を選択するボタン２
@@ -359,7 +357,7 @@ function turnGame() {
         op2 = document.createElement('div');
         op2.setAttribute('id', 'option2');
         op2.style.position = 'absolute';
-        op2.style.top = '820px';
+        op2.style.top = '870px';
         op2.style.left = '60px';
         op2.style.width = '500px';
         op2.style.height = '300px';
@@ -380,7 +378,7 @@ function turnGame() {
         op3 = document.createElement('div');
         op3.setAttribute('id', 'option3');
         op3.style.position = 'absolute';
-        op3.style.top = '930px';
+        op3.style.top = '960px';
         op3.style.left = '60px';
         op3.style.width = '400px';
         op3.style.height = '300px';
@@ -395,13 +393,13 @@ function turnGame() {
           turn = 6;
 　　　　　　turnGame();
         })}
-    //技１を選択するボタン
+    //もう１回戦うボタン
     function restartButton() {
       msW = msWindow.parentNode;
       re = document.createElement('div');
       re.setAttribute('id', 'restart');
       re.style.position = 'absolute';
-      re.style.top = '910px';
+      re.style.top = '960px';
       re.style.left = '60px';
       re.style.width = '550px';
       re.style.height = '300px';
