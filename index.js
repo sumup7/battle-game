@@ -1,17 +1,17 @@
 'use strict';
-let turn = 0;
+let turn = 0;//ターン性を区別する変数
 let msW;
-let enemyDamage = 0;
-let playerDamage = 0;
-let randomSpeed = 0;
+let enemyDamage = 0;//敵のダメージ
+let playerDamage = 0;//プレイヤーのダメージ
+let randomSpeed = 0;//素早くて軽い攻撃でランダムに上昇するスピードの値
 let op1;
 let op2;
 let op3;
 let s;
 let m;
 let re;
-let pointArray = new Array;
-const speedArray = [10,20,30];
+let pointArray = new Array;//敵の形を決める座標を入れとく配列
+const speedArray = [10,20,30];//ランダムに上昇するスピードの値の候補をいれる配列
 
 const canvas = document.body.querySelector('#draw');
 let ctx = canvas.getContext('2d');
@@ -30,14 +30,14 @@ ctx.lineTo(400, 250);
 ctx.lineTo(450, 350);
 
 // パスを閉じることを明示する
-ctx.closePath(350, 350);
+ctx.closePath(450, 350);
 // 設定したパスで多角形の描画を行う
 ctx.fill();
 }
 
 function enemyRender() {
   let points = new Map();
-  for(let i = 0; i < 7; ++i) {
+  for(let i = 0; i < 8; ++i) {
     let n = Math.floor(Math.random() * 250) + 50;
     let a = Math.floor(Math.random() * 250) + 50;
     points.set(n,a);
@@ -48,7 +48,7 @@ function enemyRender() {
  
 
 function enemy() {
-  enemyRender();
+enemyRender();
 ctx.fillStyle = 'yellow';
 ctx.beginPath(pointArray[0][0],pointArray[0][1]);
 // パスの始点を設定する
@@ -64,7 +64,7 @@ ctx.closePath(pointArray[0][0],pointArray[0][1]);
 // 設定したパスで多角形の描画を行う
 ctx.fill();
 }
-
+//メッセージウインドウのcanvas
 const msWindow = document.body.querySelector('#messageWindow');
 const msw = msWindow.getContext('2d');
 
@@ -89,10 +89,10 @@ const enemyStatus = {
   speed: 100
 };
 
-let currentPlayerHp = playerStatus.hp;
-let currentEnemyHp = enemyStatus.hp;
-let currentPlayerSpeed = playerStatus.speed;
-let currentEnemySpeed = enemyStatus.speed;
+let currentPlayerHp = playerStatus.hp;//プレイヤーステータスから現在のプレイヤーのHPに値をいれる
+let currentEnemyHp = enemyStatus.hp;//敵のステータスから現在の敵のHPに値をいれる
+let currentPlayerSpeed = playerStatus.speed;//プレイヤーステータスから現在のプレイヤーのスピードに値をいれる
+let currentEnemySpeed = enemyStatus.speed;//敵のステータスから現在の敵のスピードに値をいれる　
 
 turnGame();
 
@@ -105,13 +105,13 @@ function gameSetCheck() {
     message('お互いのHPがゼロになっった。引き分けになった。')
     restartButton();
   } else if (currentEnemyHp <= 0) {
-    // 敵のライフがゼロ以下になった。勝った。というメッセージを出す
+    // 敵のライフがゼロになった。勝った。というメッセージを出す
     ;
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
     message('敵のライフがゼロになった。勝った。');
     restartButton();
   } else if (currentPlayerHp <= 0) {
-    // 自分のライフがゼロ以下になった。負けた。というメッセージを出す
+    // 自分のライフがゼロになった。負けた。というメッセージを出す
     ;
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
     message('自分のライフがゼロになった。負けた。');
@@ -152,7 +152,7 @@ function turnGame() {
     waza1damage();
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
     message('先手をとった。重くて遅い一撃' + enemyDamage + 'のダメージ');
-    turnNext();;
+    turnNext();
   } else if (turn === 1 && currentPlayerSpeed <= enemyStatus.speed) {
     //技１を選んで相手のスピードが自分のスピードを上まった後攻の場合または双方のスピードが同じだった後攻の場合
     ;
@@ -166,7 +166,7 @@ function turnGame() {
     enemyOffensive();
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
     message('相手の攻撃のターン。相手の攻撃' + playerDamage + 'のダメージ');
-    turnNext();;
+    turnNext();
   } else if (turn === 3) {
     //相手に先攻された時の後攻の攻撃
     ;
@@ -174,21 +174,21 @@ function turnGame() {
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
     message('自分の攻撃のターン。重くて遅い一撃' + enemyDamage + 'のダメージ');
     // statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-    turnNext();;
+    turnNext();
   } else if (turn === 4 && currentPlayerSpeed > enemyStatus.speed) {
     //技２で相手のスピードを上回り先攻した場合
     ;
     waza2damage();
     message('先手をとった。素早くて軽い攻撃' + enemyDamage + 'のダメージ。自分のスピードが'+ randomSpeed + '上がった。');
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-    turnNext();;
+    turnNext();
   } else if (turn === 4 && currentPlayerSpeed < enemyStatus.speed) {
     //技２でスピード負けて相手の先攻になった場合
     ;
     enemyOffensive();
     message('素早さで負けた。相手の攻撃' + playerDamage + 'のダメージ');
     statusDraw(currentPlayerHp, currentEnemyHp,currentPlayerSpeed,currentEnemySpeed);
-    turnNext();;
+    turnNext();
   } else if(turn === 5) {
     //技２で後攻になった時の自分の攻撃のターン
     ;
@@ -233,6 +233,7 @@ function turnGame() {
     function waza1damage() {
       enemyDamage = (playerStatus.offensive - enemyStatus.defense) * 1.5;
       currentEnemyHp = currentEnemyHp - enemyDamage;
+      //ライフがゼロ以下ならゼロにする
       if(currentEnemyHp < 0){
         currentEnemyHp = 0;
         return;
@@ -245,7 +246,7 @@ function turnGame() {
       randomSpeed = speedArray[i];
       currentPlayerSpeed = currentPlayerSpeed + randomSpeed;
       currentEnemyHp = currentEnemyHp - enemyDamage;
-      
+      //ライフがゼロ以下ならゼロにする
       if(currentEnemyHp < 0){
         currentEnemyHp = 0;
         return;
@@ -258,6 +259,7 @@ function turnGame() {
     function enemyOffensive() {
       playerDamage = enemyStatus.offensive - playerStatus.defense;
       currentPlayerHp = currentPlayerHp - playerDamage;
+      //ライフがゼロ以下ならゼロにする
       if(currentPlayerHp < 0){
         currentPlayerHp = 0;
       return;

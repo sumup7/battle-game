@@ -1,38 +1,6 @@
 #messageWindow {
   position: relative;
-  top: 0;
-  left: 0;
 }
 #memo {
-  top: 0;
-  left: 300;
-  text-align: center;
   color: red;
 }
-/* #option1 {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width:500px;
-  height:500px;
-  background: transparent;
-  color: red;
-  text-align: center;
-  font-size:50px;
-  font-style:'ＭＳ ゴシック';
-} */
-/* .canvas-wrapper {
-  position: relative;
-}
-.canvas-wrapper canvas {
-  position: absolute;
-}
-.option1 {
-  position: relative;
-}
-.option2 {
-  position: relative;
-}
-.option3 {
-  position: relative;
-} */
