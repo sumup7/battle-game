@@ -10,6 +10,8 @@ let op3;
 let s;
 let m;
 let re;
+let oldChild1;
+let oldChild2;
 let pointArray = new Array;//敵の形を決める座標を入れとく配列
 const speedArray = [10,20,30];//ランダムに上昇するスピードの値の候補をいれる配列
 
@@ -312,8 +314,10 @@ function turnGame() {
     }
     //画面のステータス情報とメッセージを消す関数
     function eraserStatusAndMessage() {
-      msW.removeChild(s);
-      msW.removeChild(m);
+      // msW.removeChild(s);
+      // msW.removeChild(m);
+      oldChild1 = msW.removeChild(s);
+      oldChild2 = msW.removeChild(m);
     }
     //技１を選択するボタン
     function optionButton1() {
